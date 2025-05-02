@@ -6,7 +6,7 @@ export const quizQuestions: Question[] = [
   {
     id: 1,
     correctWord: 'accept',
-    choices: ['accept', 'except'],
+    choices: ['except', 'accept'],
   },
   {
     id: 2,
@@ -16,7 +16,7 @@ export const quizQuestions: Question[] = [
   {
     id: 3,
     correctWord: 'lose',
-    choices: ['lose', 'loose'],
+    choices: ['loose', 'lose'],
   },
   {
     id: 4,
@@ -31,12 +31,12 @@ export const quizQuestions: Question[] = [
   {
     id: 6,
     correctWord: 'principal',
-    choices: ['principal', 'principle'],
+    choices: ['principle', 'principal'],
   },
   {
     id: 7,
     correctWord: 'breath',
-    choices: ['breath', 'breathe'],
+    choices: ['breathe', 'breath'],
   },
   {
     id: 8,
@@ -51,6 +51,6 @@ export const quizQuestions: Question[] = [
   {
     id: 10,
     correctWord: 'whose',
-    choices: ['whose', 'who\'s'],
+    choices: ['who\'s', 'whose'],
   },
 ];

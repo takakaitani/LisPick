@@ -38,14 +38,14 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
   const totalQuestions = quizQuestions.length;
   const totalTime = 120; // 2 minutes in seconds
   
-  const currentQuestion = currentQuestionIndex < totalQuestions 
+  const currentQuestion = currentQuestionIndex < totalQuestions
     ? quizQuestions[currentQuestionIndex] 
     : null;
-  
+
   // Timer countdown
   useEffect(() => {
     let timer: NodeJS.Timeout;
-    
+
     if (screen === 'quiz' && timeRemaining > 0 && !showEndModal) {
       timer = setInterval(() => {
         setTimeRemaining(prev => {
@@ -58,12 +58,12 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
         });
       }, 1000);
     }
-    
+
     return () => {
       if (timer) clearInterval(timer);
     };
   }, [screen, timeRemaining, showEndModal]);
-  
+
   // Voice synthesis for pronunciation
   const speakWord = useCallback((word: string) => {
     if ('speechSynthesis' in window) {
@@ -73,13 +73,13 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
       speechSynthesis.speak(utterance);
     }
   }, []);
-  
+
   const playCurrentWord = useCallback(() => {
     if (currentQuestion) {
       speakWord(currentQuestion.correctWord);
     }
   }, [currentQuestion, speakWord]);
-  
+
   const startQuiz = useCallback(() => {
     setScreen('quiz');
     setCurrentQuestionIndex(0);
@@ -88,7 +88,7 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
     setTimeRemaining(totalTime);
     setShowEndModal(false);
   }, [totalTime]);
-  
+
   const answerQuestion = useCallback((isCorrect: boolean) => {
     setQuestionsAnswered(prev => prev + 1);
     if (isCorrect) {
@@ -104,29 +104,29 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
       return nextIndex;
     });
   }, [totalQuestions]);
-  
+
   const calculateScore = useCallback(() => {
     // Basic formula: (correct / total) * 100, rounded to whole number
     const baseScore = questionsAnswered > 0 
       ? Math.round((correctAnswers / questionsAnswered) * 100)
       : 0;
-      
+
     return baseScore;
   }, [correctAnswers, questionsAnswered]);
-  
+
   const resetQuiz = useCallback(() => {
     startQuiz();
   }, [startQuiz]);
-  
+
   const goToHome = useCallback(() => {
     setScreen('top');
   }, []);
-  
+
   const goToResults = useCallback(() => {
     setScreen('result');
     setShowEndModal(false);
   }, []);
-  
+
   return (
     <QuizContext.Provider
       value={{

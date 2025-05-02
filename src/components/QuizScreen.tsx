@@ -6,13 +6,13 @@ import { TimeBar } from './TimeBar';
 import { EndModal } from './EndModal';
 
 export const QuizScreen: React.FC = () => {
-  const { 
-    currentQuestion, 
-    currentQuestionIndex, 
-    totalQuestions, 
+  const {
+    currentQuestion,
+    currentQuestionIndex,
+    totalQuestions,
     playCurrentWord,
     timeRemaining,
-    showEndModal
+    showEndModal,
   } = useContext(QuizContext);
 
   const [isPlaying, setIsPlaying] = useState(false);
