@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
-import { quizQuestions } from '../data/questions';
+import { fetchQuizQuestions } from '../data/questions';
 import { Question, Screen } from '../types';
 
 interface QuizContextType {
@@ -34,12 +34,21 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(120); // 2 minutes in seconds
   const [showEndModal, setShowEndModal] = useState(false);
-  
-  const totalQuestions = quizQuestions.length;
+
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const totalQuestions = questions.length;
   const totalTime = 120; // 2 minutes in seconds
-  
+
+  useEffect(() => {
+    const loadQuestions = async () => {
+      const data = await fetchQuizQuestions();
+      setQuestions(data);
+    };
+    loadQuestions();
+  }, []);
+
   const currentQuestion = currentQuestionIndex < totalQuestions
-    ? quizQuestions[currentQuestionIndex] 
+    ? questions[currentQuestionIndex]
     : null;
 
   // Timer countdown

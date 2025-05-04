@@ -1,56 +1,20 @@
 import { Question } from '../types';
 
-// Sample question data
-// In a real app, this would be a larger database with more word pairs
-export const quizQuestions: Question[] = [
-  {
-    id: 1,
-    correctWord: 'accept',
-    choices: ['except', 'accept'],
-  },
-  {
-    id: 2,
-    correctWord: 'affect',
-    choices: ['affect', 'effect'],
-  },
-  {
-    id: 3,
-    correctWord: 'lose',
-    choices: ['loose', 'lose'],
-  },
-  {
-    id: 4,
-    correctWord: 'weather',
-    choices: ['weather', 'whether'],
-  },
-  {
-    id: 5,
-    correctWord: 'quiet',
-    choices: ['quiet', 'quite'],
-  },
-  {
-    id: 6,
-    correctWord: 'principal',
-    choices: ['principle', 'principal'],
-  },
-  {
-    id: 7,
-    correctWord: 'breath',
-    choices: ['breathe', 'breath'],
-  },
-  {
-    id: 8,
-    correctWord: 'desert',
-    choices: ['desert', 'dessert'],
-  },
-  {
-    id: 9,
-    correctWord: 'their',
-    choices: ['their', 'there'],
-  },
-  {
-    id: 10,
-    correctWord: 'whose',
-    choices: ['who\'s', 'whose'],
-  },
-];
+// Fetch question data from Laravel backend
+export async function fetchQuizQuestions(): Promise<Question[]> {
+  try {
+    const response = await fetch('http://127.0.0.1:8000/api/questions');
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data: Question[] = await response.json();
+    return data.map((q) => ({
+      id: q.id,
+      correctWord: Math.random() < 0.5 ? q.choice_a : q.choice_b,
+      choices: [q.choice_a, q.choice_b],
+    }));
+  } catch (error) {
+    console.error('Failed to fetch quiz questions:', error);
+    return [];
+  }
+}
