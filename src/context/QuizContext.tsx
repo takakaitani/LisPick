@@ -12,6 +12,7 @@ interface QuizContextType {
   timeRemaining: number;
   totalTime: number;
   showEndModal: boolean;
+  isLoading: boolean;
   startQuiz: () => void;
   playCurrentWord: () => void;
   answerQuestion: (isCorrect: boolean) => void;
@@ -36,16 +37,9 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
   const [showEndModal, setShowEndModal] = useState(false);
 
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const totalQuestions = questions.length;
   const totalTime = 120; // 2 minutes in seconds
-
-  useEffect(() => {
-    const loadQuestions = async () => {
-      const data = await fetchQuizQuestions();
-      setQuestions(data);
-    };
-    loadQuestions();
-  }, []);
 
   const currentQuestion = currentQuestionIndex < totalQuestions
     ? questions[currentQuestionIndex]
@@ -89,14 +83,23 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
     }
   }, [currentQuestion, speakWord]);
 
-  const startQuiz = useCallback(() => {
-    setScreen('quiz');
-    setCurrentQuestionIndex(0);
-    setQuestionsAnswered(0);
-    setCorrectAnswers(0);
-    setTimeRemaining(totalTime);
-    setShowEndModal(false);
-  }, [totalTime]);
+  const startQuiz = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const data = await fetchQuizQuestions();
+      setQuestions(data);
+      setScreen('quiz');
+      setCurrentQuestionIndex(0);
+      setQuestionsAnswered(0);
+      setCorrectAnswers(0);
+      setTimeRemaining(totalTime);
+      setShowEndModal(false);
+    } catch (error) {
+      console.error('Failed to fetch questions:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [questions, totalTime]);
 
   const answerQuestion = useCallback((isCorrect: boolean) => {
     setQuestionsAnswered(prev => prev + 1);
@@ -148,6 +151,7 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
         timeRemaining,
         totalTime,
         showEndModal,
+        isLoading,
         startQuiz,
         playCurrentWord,
         answerQuestion,
