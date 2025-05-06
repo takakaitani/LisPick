@@ -5,3 +5,9 @@ export interface Question {
   correctWord: string;
   choices: string[];
 }
+
+export interface Answer {
+  id: number;
+  selectedWord: string;
+  isCorrect: boolean;
+}

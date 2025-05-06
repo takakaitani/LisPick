@@ -13,6 +13,7 @@ export const QuizScreen: React.FC = () => {
     playCurrentWord,
     timeRemaining,
     showEndModal,
+    finishQuiz,
   } = useContext(QuizContext);
 
   const [isPlaying, setIsPlaying] = useState(false);
@@ -25,6 +26,13 @@ export const QuizScreen: React.FC = () => {
 
     return () => clearTimeout(timer);
   }, [currentQuestionIndex]);
+
+  // クイズ終了時に finishQuiz をバックグラウンドで実行
+  useEffect(() => {
+    if (showEndModal) {
+      finishQuiz();
+    }
+  }, [showEndModal, finishQuiz]);
 
   const handlePlayWord = () => {
     setIsPlaying(true);
@@ -82,7 +90,11 @@ export const QuizScreen: React.FC = () => {
         </div>
       </div>
       
-      {showEndModal && <EndModal />}
+      {showEndModal && (
+        <EndModal>
+          <p>Quiz completed! Redirecting to results...</p>
+        </EndModal>
+      )}
     </div>
   );
 };

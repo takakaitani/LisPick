@@ -14,12 +14,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({ choices, correctAnsw
 
   const handleAnswer = (choice: string) => {
     if (selectedAnswer) return; // Prevent multiple answers
-    
+
     setSelectedAnswer(choice);
     setShowFeedback(true);
-    
+
     const isCorrect = choice === correctAnswer;
-    
+
     // Show feedback briefly before moving to next question
     setTimeout(() => {
       answerQuestion(isCorrect);

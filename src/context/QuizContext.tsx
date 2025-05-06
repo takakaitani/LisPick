@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import { fetchQuizQuestions } from '../data/questions';
-import { Question, Screen } from '../types';
+import { saveResults } from '../api/results';
+import { Screen, Question, Answer } from '../types';
 
 interface QuizContextType {
   screen: Screen;
@@ -20,6 +21,7 @@ interface QuizContextType {
   resetQuiz: () => void;
   goToHome: () => void;
   goToResults: () => void;
+  finishQuiz: () => void;
 }
 
 export const QuizContext = createContext<QuizContextType>({} as QuizContextType);
@@ -139,6 +141,25 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
     setShowEndModal(false);
   }, []);
 
+  const finishQuiz = useCallback(async () => {
+    try {
+      const score = Math.round((correctAnswers / questionsAnswered) * 100);
+
+      const answers = questions.map((q) => ({
+        question_id: q.id,
+        selected_word: q.selectedWord, // ユーザーが選んだ単語
+        is_correct: q.isCorrect,
+      }));
+
+      // 結果をバックグラウンドで保存
+      console.log('Saving results...'); // debug
+      await saveResults(questionsAnswered, correctAnswers, score, answers);
+      console.log('Results saved successfully.'); // debug
+    } catch (error) {
+      console.error('Failed to save results:', error);
+    }
+  }, [questions, questionsAnswered, correctAnswers]);
+
   return (
     <QuizContext.Provider
       value={{
@@ -158,7 +179,8 @@ export const QuizProvider: React.FC<QuizProviderProps> = ({ children }) => {
         calculateScore,
         resetQuiz,
         goToHome,
-        goToResults
+        goToResults,
+        finishQuiz
       }}
     >
       {children}
