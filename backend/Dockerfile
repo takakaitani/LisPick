@@ -1,9 +1,8 @@
 FROM php:8.2-fpm
 
-# Set working directory
 WORKDIR /var/www
 
-# Install system dependencies
+# System deps
 RUN apt-get update && apt-get install -y \
     build-essential \
     libpng-dev \
@@ -21,14 +20,15 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy existing application directory contents
+# Copy existing project files
 COPY . /var/www
 
-# Set permissions
+# Install PHP dependencies
+RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+
+# Laravel permissions
 RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
 
-# Expose port
 EXPOSE 8000
 
-# Start Laravel server
 CMD php artisan serve --host=0.0.0.0 --port=8000
