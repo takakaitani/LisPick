@@ -9,7 +9,7 @@ export const TopScreen: React.FC = () => {
     <div className="container max-w-md mx-auto px-4 py-12 flex flex-col items-center justify-center min-h-screen">
       <div className="text-center">
         <h1 className="text-4xl font-bold text-indigo-700 mb-2">
-          Word<span className="text-blue-500">Sound</span>
+          Lis<span className="text-blue-500">Pick</span>
         </h1>
         <h2 className="text-xl text-gray-600 mb-8">English Pronunciation Quiz</h2>
 
